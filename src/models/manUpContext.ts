@@ -1,8 +1,8 @@
 import type { ManUpStatus } from '../constants';
-import type { Config } from './config';
+import type { PlatFormData } from './config';
 
 export interface ManUpContext {
-  config?: Config;
+  settings?: PlatFormData;
   status: ManUpStatus;
   message: string;
   handleManUpStatus: ({

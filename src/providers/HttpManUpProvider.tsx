@@ -4,6 +4,7 @@ import { useHttpRemoteConfig } from '../hooks/useHttpRemoteConfig';
 import type { ManUpContext } from '../models/manUpContext';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '../queryClient';
+import { Platform } from 'react-native';
 
 export function HttpManUpProvider({
   httpManUpConfigUrl,
@@ -30,18 +31,22 @@ const HttpManUpContextProvider = ({
   httpManUpConfigUrl: string;
   children: React.ReactNode;
 }) => {
-  const { data: config } = useHttpRemoteConfig(httpManUpConfigUrl);
+  const { data: config, error } = useHttpRemoteConfig(httpManUpConfigUrl);
+  const settings = config?.[Platform.OS];
   const { validate, status, message, handleManUpStatus } = useManUp();
 
   useEffect(() => {
+    if (error) {
+      throw error;
+    }
     if (config) {
       validate({ config });
     }
-  }, [config, validate]);
+  }, [config, error, validate]);
 
   return (
     <HttpManUpContext.Provider
-      value={{ config, status, message, handleManUpStatus }}
+      value={{ settings, status, message, handleManUpStatus }}
     >
       {children}
     </HttpManUpContext.Provider>

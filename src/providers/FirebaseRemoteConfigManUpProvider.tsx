@@ -4,6 +4,7 @@ import type { ManUpContext } from '../models/manUpContext';
 import { useManUp } from '../hooks/useManUp';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '../queryClient';
+import { Platform } from 'react-native';
 
 export function FirebaseRemoteConfigManUpProvider({
   firebaseRemoteConfigName,
@@ -32,18 +33,24 @@ const FirebaseRemoteConfigManUpContextProvider = ({
   firebaseRemoteConfigName: string;
   children: React.ReactNode;
 }) => {
-  const { data: config } = useFirebaseRemoteConfig(firebaseRemoteConfigName);
+  const { data: config, error } = useFirebaseRemoteConfig(
+    firebaseRemoteConfigName
+  );
+  const settings = config?.[Platform.OS];
   const { validate, status, message, handleManUpStatus } = useManUp();
 
   useEffect(() => {
+    if (error) {
+      throw error;
+    }
     if (config) {
       validate({ config });
     }
-  }, [config, validate]);
+  }, [config, error, validate]);
 
   return (
     <FirebaseRemoteConfigManUpContext.Provider
-      value={{ config, status, message, handleManUpStatus }}
+      value={{ settings, status, message, handleManUpStatus }}
     >
       {children}
     </FirebaseRemoteConfigManUpContext.Provider>
