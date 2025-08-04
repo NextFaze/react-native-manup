@@ -1,4 +1,11 @@
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+  Linking,
+} from 'react-native';
 import { useState } from 'react';
 import DeviceInfo from 'react-native-device-info';
 import { RemoteConfigProvider, useRemoteConfigManUp } from 'react-native-manup';
@@ -29,12 +36,14 @@ const Home = () => {
   const [modalTitle, setModalTitle] = useState('');
   const [modalMessage, setModalMessage] = useState('');
   const [modalCancelable, setModalCancelable] = useState(true);
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
 
   const onUpdateAvailable = () => {
     setModalTitle('Update available');
     setModalMessage(message);
     setModalCancelable(true);
     setModalVisible(true);
+    setMaintenanceMode(false);
   };
 
   const onUpdateRequired = () => {
@@ -42,6 +51,7 @@ const Home = () => {
     setModalMessage(message);
     setModalCancelable(false);
     setModalVisible(true);
+    setMaintenanceMode(false);
   };
 
   const onMaintenanceMode = () => {
@@ -49,6 +59,7 @@ const Home = () => {
     setModalMessage(message);
     setModalCancelable(false);
     setModalVisible(true);
+    setMaintenanceMode(true);
   };
 
   const { settings, status, message } = useRemoteConfigManUp({
@@ -56,6 +67,16 @@ const Home = () => {
     onUpdateRequired,
     onMaintenanceMode,
   });
+
+  const onAction = async () => {
+    if (settings?.url) {
+      try {
+        await Linking.openURL(settings.url);
+      } catch (error) {
+        console.error('Failed to open app store URL:', error);
+      }
+    }
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 16 }}>
@@ -87,12 +108,14 @@ const Home = () => {
                   <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
               )}
-              <TouchableOpacity
-                style={[styles.button, styles.buttonPrimary]}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.buttonText}>OK</Text>
-              </TouchableOpacity>
+              {!maintenanceMode && (
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonPrimary]}
+                  onPress={onAction}
+                >
+                  <Text style={styles.buttonText}>OK</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
