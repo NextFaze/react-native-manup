@@ -66,15 +66,17 @@ function App() {
 
 function HomeScreen() {
   const { status, message } = useRemoteConfigManUp({
-    onUpdateAvailable: () => {
-      Alert.alert('Update Available', message);
-    },
-    onUpdateRequired: () => {
-      Alert.alert('Update Required', message);
-    },
-    onMaintenanceMode: () => {
-      Alert.alert('Maintenance Mode', message);
-    },
+  const onUpdateAvailable = () => {
+    Alert.alert('Update available', message);
+  };
+
+  const onUpdateRequired = () => {
+    Alert.alert('Update required', message);
+  };
+
+  const onMaintenanceMode = () => {
+    Alert.alert('Maintenance mode', message);
+  };
   });
 
   return (
@@ -109,15 +111,17 @@ function App() {
 
 function HomeScreen() {
   const { status, message } = useRemoteConfigManUp({
-    onUpdateAvailable: () => {
-      Alert.alert('Update Available', message);
-    },
-    onUpdateRequired: () => {
-      Alert.alert('Update Required', message);
-    },
-    onMaintenanceMode: () => {
-      Alert.alert('Maintenance Mode', message);
-    },
+  const onUpdateAvailable = () => {
+    Alert.alert('Update available', message);
+  };
+
+  const onUpdateRequired = () => {
+    Alert.alert('Update required', message);
+  };
+
+  const onMaintenanceMode = () => {
+    Alert.alert('Maintenance mode', message);
+  };
   });
 
   return (

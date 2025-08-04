@@ -15,7 +15,6 @@ export default function App() {
         }
         return response.json();
       }}
-      refetchInterval={1000}
       queryKey="exampleConfig"
     >
       <Home />
@@ -27,15 +26,15 @@ const Home = () => {
   const appVersion = DeviceInfo.getVersion();
 
   const onUpdateAvailable = () => {
-    Alert.alert(message);
+    Alert.alert('Update available', message);
   };
 
   const onUpdateRequired = () => {
-    Alert.alert(message);
+    Alert.alert('Update required', message);
   };
 
   const onMaintenanceMode = () => {
-    Alert.alert(message);
+    Alert.alert('Maintenance mode', message);
   };
 
   const { settings, status, message } = useRemoteConfigManUp({
