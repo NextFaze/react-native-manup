@@ -4,10 +4,9 @@ import {
   RemoteConfigProvider,
   useRemoteConfigManUp,
 } from '../providers/RemoteConfigProvider';
-import { View, Text } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import type { Config } from '../models/config';
 
-// Mock the useManUp hook
 jest.mock('../hooks/useManUp', () => ({
   useManUp: jest.fn(() => ({
     validate: jest.fn(),
@@ -17,11 +16,13 @@ jest.mock('../hooks/useManUp', () => ({
   })),
 }));
 
-// Mock react-query
 jest.mock('@tanstack/react-query', () => ({
   ...jest.requireActual('@tanstack/react-query'),
   useQuery: jest.fn(),
 }));
+
+// Lock platform OS for testing
+Platform.OS = 'android';
 
 const mockUseQuery = require('@tanstack/react-query').useQuery;
 
@@ -255,6 +256,12 @@ describe('RemoteConfigProvider', () => {
         url: 'https://example.com',
         enabled: true,
       },
+      android: {
+        latest: '1.0.0',
+        minimum: '0.9.0',
+        url: 'https://example.com',
+        enabled: true,
+      },
     };
 
     const mockFetchConfig = jest.fn().mockResolvedValue(mockConfig);
@@ -282,6 +289,63 @@ describe('RemoteConfigProvider', () => {
 
     await waitFor(() => {
       expect(getByTestId('status')).toBeTruthy();
+    });
+  });
+
+  it('fetches and provides custom properties from remote config', async () => {
+    const mockConfig: Config = {
+      ios: {
+        latest: '1.0.0',
+        minimum: '0.9.0',
+        url: 'https://example.com',
+        enabled: true,
+        publicApiUrl: 'https://api.ios-example.com/v1',
+      },
+      android: {
+        latest: '1.0.0',
+        minimum: '0.9.0',
+        url: 'https://example.com',
+        enabled: true,
+        publicApiUrl: 'https://api.android-example.com/v1',
+      },
+      publicApiUrl: 'https://api.example.com/v1',
+    };
+
+    const mockFetchConfig = jest.fn().mockResolvedValue(mockConfig);
+
+    mockUseQuery.mockReturnValue({
+      data: mockConfig,
+      error: null,
+      isLoading: false,
+    });
+
+    const CustomTestComponent = () => {
+      const { status, config, settings } = useRemoteConfigManUp({});
+      return (
+        <View>
+          <Text testID="status">{status}</Text>
+          <Text testID="publicApiUrl">{config?.publicApiUrl}</Text>
+          <Text testID="platformPublicApiUrl">{settings?.publicApiUrl}</Text>
+        </View>
+      );
+    };
+
+    const { getByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <RemoteConfigProvider fetchConfig={mockFetchConfig}>
+          <CustomTestComponent />
+        </RemoteConfigProvider>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(getByTestId('status')).toBeTruthy();
+      expect(getByTestId('publicApiUrl')).toHaveTextContent(
+        'https://api.example.com/v1'
+      );
+      expect(getByTestId('platformPublicApiUrl')).toHaveTextContent(
+        'https://api.android-example.com/v1'
+      );
     });
   });
 });

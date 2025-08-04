@@ -163,14 +163,20 @@ interface PlatFormData {
     "latest": "1.2.0",
     "minimum": "1.0.0",
     "url": "https://apps.apple.com/app/yourapp",
-    "enabled": true
+    "enabled": true,
+    // Custom platform-specific property - can be any additional data you need
+    "publicApiUrl": "https://api.ios-example.com/v1"
   },
   "android": {
     "latest": "1.2.0",
     "minimum": "1.0.0",
     "url": "https://play.google.com/store/apps/details?id=com.yourapp",
-    "enabled": true
-  }
+    "enabled": true,
+    // Custom platform-specific property - can be any additional data you need
+    "publicApiUrl": "https://api.android-example.com/v1"
+  },
+  // Custom global property - shared across all platforms
+  "publicApiUrl": "https://api.example.com/v1"
 }
 ```
 

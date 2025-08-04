@@ -61,7 +61,7 @@ const RemoteConfigContextProvider = ({
 
   return (
     <RemoteConfigContext.Provider
-      value={{ settings, status, message, handleManUpStatus }}
+      value={{ config, settings, status, message, handleManUpStatus }}
     >
       {children}
     </RemoteConfigContext.Provider>

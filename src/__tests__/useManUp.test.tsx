@@ -8,7 +8,6 @@ jest.mock('semver', () => ({
 }));
 
 import { renderHook, act } from '@testing-library/react-native';
-import { Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Semver from 'semver';
 import { useManUp } from '../hooks/useManUp';
@@ -31,7 +30,13 @@ describe('useManUp', () => {
   describe('validate platform returns disabled status', () => {
     it('returns disabled status when platform is disabled', () => {
       const config: Config = {
-        [Platform.OS]: {
+        ios: {
+          latest: '2.0.0',
+          minimum: '1.0.0',
+          url: 'https://example.com',
+          enabled: false,
+        },
+        android: {
           latest: '2.0.0',
           minimum: '1.0.0',
           url: 'https://example.com',
@@ -55,7 +60,13 @@ describe('useManUp', () => {
   describe('disabled status takes precedence', () => {
     it('disabled status takes precedence over version validation', () => {
       const config: Config = {
-        [Platform.OS]: {
+        ios: {
+          latest: '0.5.0',
+          minimum: '0.1.0',
+          url: 'https://example.com',
+          enabled: false,
+        },
+        android: {
           latest: '0.5.0',
           minimum: '0.1.0',
           url: 'https://example.com',
@@ -79,7 +90,13 @@ describe('useManUp', () => {
   describe('validate platform returns unsupported version', () => {
     it('returns unsupported status when current version is below minimum', () => {
       const config: Config = {
-        [Platform.OS]: {
+        ios: {
+          latest: '2.0.0',
+          minimum: '1.5.0',
+          url: 'https://example.com',
+          enabled: true,
+        },
+        android: {
           latest: '2.0.0',
           minimum: '1.5.0',
           url: 'https://example.com',
@@ -107,7 +124,13 @@ describe('useManUp', () => {
   describe('validate platform returns supported version', () => {
     it('returns supported status when current version meets minimum but not latest', () => {
       const config: Config = {
-        [Platform.OS]: {
+        ios: {
+          latest: '2.0.0',
+          minimum: '1.0.0',
+          url: 'https://example.com',
+          enabled: true,
+        },
+        android: {
           latest: '2.0.0',
           minimum: '1.0.0',
           url: 'https://example.com',
@@ -131,7 +154,13 @@ describe('useManUp', () => {
   describe('validate platform returns latest version', () => {
     it('returns latest status when current version equals latest version', () => {
       const config: Config = {
-        [Platform.OS]: {
+        ios: {
+          latest: '1.0.0',
+          minimum: '1.0.0',
+          url: 'https://example.com',
+          enabled: true,
+        },
+        android: {
           latest: '1.0.0',
           minimum: '1.0.0',
           url: 'https://example.com',
@@ -153,7 +182,13 @@ describe('useManUp', () => {
 
     it('returns latest status when current version is above latest', () => {
       const config: Config = {
-        [Platform.OS]: {
+        ios: {
+          latest: '0.9.0',
+          minimum: '0.5.0',
+          url: 'https://example.com',
+          enabled: true,
+        },
+        android: {
           latest: '0.9.0',
           minimum: '0.5.0',
           url: 'https://example.com',
@@ -174,7 +209,7 @@ describe('useManUp', () => {
     });
 
     it('returns latest status when platform is undefined', () => {
-      const config: Config = {};
+      const config = {} as Config;
 
       const { result } = renderHook(() => useManUp());
 
@@ -225,7 +260,13 @@ describe('useManUp', () => {
   describe('error handling', () => {
     it('returns unsupported status when semver parsing fails', () => {
       const config: Config = {
-        [Platform.OS]: {
+        ios: {
+          latest: '2.0.0',
+          minimum: '1.0.0',
+          url: 'https://example.com',
+          enabled: true,
+        },
+        android: {
           latest: '2.0.0',
           minimum: '1.0.0',
           url: 'https://example.com',
