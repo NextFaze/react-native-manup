@@ -8,7 +8,7 @@ export default function App() {
   return (
     <RemoteConfigProvider
       fetchConfig={async () => {
-        const response = await fetch('http://192.168.24.100:8082/config.json', {
+        const response = await fetch('https://your-api.com/config.json', {
           cache: 'no-store',
         });
         if (!response.ok) {
