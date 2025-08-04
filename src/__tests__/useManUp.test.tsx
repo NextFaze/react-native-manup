@@ -1,4 +1,3 @@
-// Mock dependencies before imports
 jest.mock('react-native-device-info', () => ({
   getVersion: jest.fn(),
 }));
