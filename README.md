@@ -41,6 +41,8 @@ The `RemoteConfigProvider` is a unified solution that works with any config sour
 
 #### HTTP Configuration Example
 
+Can also see the full example code at [example/App.tsx](example/App.tsx)
+
 ```tsx
 import React from 'react';
 import { Alert } from 'react-native';
@@ -67,15 +69,18 @@ function App() {
 function HomeScreen() {
   const { status, message } = useRemoteConfigManUp({
   const onUpdateAvailable = () => {
-    Alert.alert('Update available', message);
+    // - Display update available modal
+    // - Modal can be dismissed
   };
 
   const onUpdateRequired = () => {
-    Alert.alert('Update required', message);
+    // - Display update required modal
+    // - Modal shouldn't be dismissible as user is required to update the app
   };
 
   const onMaintenanceMode = () => {
-    Alert.alert('Maintenance mode', message);
+    // - Display maintenance mode modal
+    // - Modal shouldn't be dismissible as the app is in maintenance mode
   };
   });
 
@@ -112,15 +117,18 @@ function App() {
 function HomeScreen() {
   const { status, message } = useRemoteConfigManUp({
   const onUpdateAvailable = () => {
-    Alert.alert('Update available', message);
+    // - Display update available modal
+    // - Modal can be dismissed
   };
 
   const onUpdateRequired = () => {
-    Alert.alert('Update required', message);
+    // - Display update required modal
+    // - Modal shouldn't be dismissible as user is required to update the app
   };
 
   const onMaintenanceMode = () => {
-    Alert.alert('Maintenance mode', message);
+    // - Display maintenance mode modal
+    // - Modal shouldn't be dismissible as the app is in maintenance mode
   };
   });
 

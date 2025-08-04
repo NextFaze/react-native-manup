@@ -87,13 +87,8 @@ export const useRemoteConfigManUp = ({
       onUpdateRequired,
       onMaintenanceMode,
     });
-  }, [
-    status,
-    handleManUpStatus,
-    onUpdateAvailable,
-    onUpdateRequired,
-    onMaintenanceMode,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   return context;
 };
