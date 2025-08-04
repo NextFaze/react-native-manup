@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '100%',
+    gap: 16,
   },
   button: {
     borderRadius: 10,
