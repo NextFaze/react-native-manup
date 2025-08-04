@@ -1,13 +1,25 @@
 import { View, Text, Alert } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { HttpManUpProvider, useHttpManUp } from 'react-native-manup';
+import { RemoteConfigProvider, useRemoteConfigManUp } from 'react-native-manup';
 import { Divider } from './components/Divider';
 
 export default function App() {
   return (
-    <HttpManUpProvider httpManUpConfigUrl="https://your-api.com/config.json">
+    <RemoteConfigProvider
+      fetchConfig={async () => {
+        const response = await fetch('https://your-api.com/config.json', {
+          cache: 'no-store',
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      }}
+      refetchInterval={1000}
+      queryKey="exampleConfig"
+    >
       <Home />
-    </HttpManUpProvider>
+    </RemoteConfigProvider>
   );
 }
 
@@ -26,7 +38,7 @@ const Home = () => {
     Alert.alert(message);
   };
 
-  const { settings, status, message } = useHttpManUp({
+  const { settings, status, message } = useRemoteConfigManUp({
     onUpdateAvailable,
     onUpdateRequired,
     onMaintenanceMode,

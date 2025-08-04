@@ -22,28 +22,50 @@ npm install react-native-manup
 This library requires the following peer dependencies:
 
 ```sh
-npm install react-native-device-info @react-native-firebase/app @react-native-firebase/remote-config
+npm install react-native-device-info
+```
+
+#### Optional Firebase Dependencies
+
+If you plan to use Firebase Remote Config as your configuration source, you'll also need to install:
+
+```sh
+npm install @react-native-firebase/app @react-native-firebase/remote-config
 ```
 
 ## Usage
 
-### HTTP Configuration Provider
+### Remote Config Provider
+
+The `RemoteConfigProvider` is a unified solution that works with any config source. It provides automatic caching, refetching, and change detection through react-query.
+
+#### HTTP Configuration Example
 
 ```tsx
 import React from 'react';
 import { Alert } from 'react-native';
-import { HttpManUpProvider, useHttpManUp } from 'react-native-manup';
+import { RemoteConfigProvider, useRemoteConfigManUp } from 'react-native-manup';
 
 function App() {
   return (
-    <HttpManUpProvider httpManUpConfigUrl="https://your-api.com/config.json">
+    <RemoteConfigProvider
+      fetchConfig={async () => {
+        const response = await fetch('https://your-api.com/config.json', { cache: 'no-store'});
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      }}
+      refetchInterval={3600000} // 1 hour (optional)
+      queryKey="httpConfig" // optional
+    >
       <HomeScreen />
-    </HttpManUpProvider>
+    </RemoteConfigProvider>
   );
 }
 
 function HomeScreen() {
-  const { status, message } = useHttpManUp({
+  const { status, message } = useRemoteConfigManUp({
     onUpdateAvailable: () => {
       Alert.alert('Update Available', message);
     },
@@ -61,28 +83,32 @@ function HomeScreen() {
 }
 ```
 
-### Firebase Remote Config Provider
+#### Firebase Remote Config Example
 
 > **Prerequisite**: You must install and set up Firebase in your React Native app before using this provider. Follow the [React Native Firebase setup guide](https://rnfirebase.io/#installation) to configure `@react-native-firebase/app` and `@react-native-firebase/remote-config`.
 
 ```tsx
 import React from 'react';
 import { Alert } from 'react-native';
-import {
-  FirebaseRemoteConfigManUpProvider,
-  useFirebaseRemoteConfigManUp
-} from 'react-native-manup';
+import { RemoteConfigProvider, useRemoteConfigManUp } from 'react-native-manup';
+import remoteConfig from '@react-native-firebase/remote-config';
 
 function App() {
   return (
-    <FirebaseRemoteConfigManUpProvider firebaseRemoteConfigName="appConfig">
+    <RemoteConfigProvider
+      fetchConfig={async () => {
+        await remoteConfig().fetchAndActivate();
+        return JSON.parse(remoteConfig().getValue('appConfig').asString());
+      }}
+      queryKey="firebaseConfig"
+    >
       <HomeScreen />
-    </FirebaseRemoteConfigManUpProvider>
+    </RemoteConfigProvider>
   );
 }
 
 function HomeScreen() {
-  const { status, message } = useFirebaseRemoteConfigManUp({
+  const { status, message } = useRemoteConfigManUp({
     onUpdateAvailable: () => {
       Alert.alert('Update Available', message);
     },

@@ -63,8 +63,6 @@
     "semver": "^7.7.2"
   },
   "peerDependencies": {
-    "@react-native-firebase/app": ">=22.4.0",
-    "@react-native-firebase/remote-config": ">=22.4.0",
     "react": "19.1.0",
     "react-native": ">=0.79",
     "react-native-device-info": "^14.0.4"
@@ -72,6 +70,12 @@
   "peerDependenciesMeta": {
     "react-native-device-info": {
       "optional": false
+    },
+    "@react-native-firebase/app": {
+      "optional": true
+    },
+    "@react-native-firebase/remote-config": {
+      "optional": true
     }
   },
   "devDependencies": {

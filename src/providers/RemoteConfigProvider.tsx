@@ -1,41 +1,52 @@
 import React, { createContext, useContext, useEffect } from 'react';
-import { useFirebaseRemoteConfig } from '../hooks/useFirebaseRemoteConfig';
-import type { ManUpContext } from '../models/manUpContext';
+import { useRemoteConfig } from '../hooks/useRemoteConfig';
 import { useManUp } from '../hooks/useManUp';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '../queryClient';
 import { Platform } from 'react-native';
+import type { Config } from '../models/config';
+import type { RemoteConfigContext } from '../models/config';
 
-export function FirebaseRemoteConfigManUpProvider({
-  firebaseRemoteConfigName,
-  children,
-}: {
-  firebaseRemoteConfigName: string;
+interface RemoteConfigProviderProps {
+  fetchConfig: () => Promise<Config>;
+  refetchInterval?: number;
+  queryKey?: string;
   children: React.ReactNode;
-}) {
+}
+
+export function RemoteConfigProvider({
+  fetchConfig,
+  refetchInterval,
+  queryKey,
+  children,
+}: RemoteConfigProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <FirebaseRemoteConfigManUpContextProvider
-        firebaseRemoteConfigName={firebaseRemoteConfigName}
+      <RemoteConfigContextProvider
+        fetchConfig={fetchConfig}
+        refetchInterval={refetchInterval}
+        queryKey={queryKey}
       >
         {children}
-      </FirebaseRemoteConfigManUpContextProvider>
+      </RemoteConfigContextProvider>
     </QueryClientProvider>
   );
 }
 
-const FirebaseRemoteConfigManUpContext = createContext<ManUpContext>(null!);
+const RemoteConfigContext = createContext<RemoteConfigContext>(null!);
 
-const FirebaseRemoteConfigManUpContextProvider = ({
-  firebaseRemoteConfigName,
+const RemoteConfigContextProvider = ({
+  fetchConfig,
+  refetchInterval,
+  queryKey,
   children,
-}: {
-  firebaseRemoteConfigName: string;
-  children: React.ReactNode;
-}) => {
-  const { data: config, error } = useFirebaseRemoteConfig(
-    firebaseRemoteConfigName
-  );
+}: RemoteConfigProviderProps) => {
+  const { data: config, error } = useRemoteConfig({
+    fetchConfig,
+    refetchInterval,
+    queryKey,
+  });
+
   const settings = config?.[Platform.OS];
   const { validate, status, message, handleManUpStatus } = useManUp();
 
@@ -49,15 +60,15 @@ const FirebaseRemoteConfigManUpContextProvider = ({
   }, [config, error, validate]);
 
   return (
-    <FirebaseRemoteConfigManUpContext.Provider
+    <RemoteConfigContext.Provider
       value={{ settings, status, message, handleManUpStatus }}
     >
       {children}
-    </FirebaseRemoteConfigManUpContext.Provider>
+    </RemoteConfigContext.Provider>
   );
 };
 
-export const useFirebaseRemoteConfigManUp = ({
+export const useRemoteConfigManUp = ({
   onUpdateAvailable,
   onUpdateRequired,
   onMaintenanceMode,
@@ -66,7 +77,7 @@ export const useFirebaseRemoteConfigManUp = ({
   onUpdateRequired?: () => void;
   onMaintenanceMode?: () => void;
 }) => {
-  const context = useContext(FirebaseRemoteConfigManUpContext);
+  const context = useContext(RemoteConfigContext);
   const { status, handleManUpStatus } = context;
 
   useEffect(() => {

@@ -1,6 +1,5 @@
-export { HttpManUpProvider, useHttpManUp } from './providers/HttpManUpProvider';
 export {
-  FirebaseRemoteConfigManUpProvider,
-  useFirebaseRemoteConfigManUp,
-} from './providers/FirebaseRemoteConfigManUpProvider';
+  RemoteConfigProvider,
+  useRemoteConfigManUp,
+} from './providers/RemoteConfigProvider';
 export { type Config, type PlatFormData } from './models/config';
