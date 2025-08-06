@@ -58,38 +58,59 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "dependencies": {
+    "@tanstack/react-query": ">=5.0.0 <6.0.0",
+    "semver": "^7.7.2"
+  },
+  "peerDependencies": {
+    "react": "19.1.0",
+    "react-native": "^0.80.2",
+    "react-native-device-info": "^14.0.4"
+  },
+  "peerDependenciesMeta": {
+    "react-native-device-info": {
+      "optional": false
+    },
+    "@react-native-firebase/app": {
+      "optional": true
+    },
+    "@react-native-firebase/remote-config": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.6.0",
     "@eslint/compat": "^1.2.7",
     "@eslint/eslintrc": "^3.3.0",
     "@eslint/js": "^9.22.0",
     "@evilmartians/lefthook": "^1.5.0",
-    "@react-native/babel-preset": "0.78.2",
-    "@react-native/eslint-config": "^0.78.0",
+    "@react-native/babel-preset": "^0.80.2",
+    "@react-native/eslint-config": "^0.80.2",
     "@release-it/conventional-changelog": "^9.0.2",
+    "@testing-library/react-native": "^13.2.2",
     "@types/jest": "^29.5.5",
-    "@types/react": "^19.0.12",
+    "@types/react": "19.1.0",
+    "@types/semver": "^7.7.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
     "commitlint": "^19.6.1",
     "del-cli": "^5.1.0",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-ft-flow": "^3.0.11",
+    "eslint-plugin-jest": "^29.0.1",
     "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-native": "^5.0.0",
     "jest": "^29.7.0",
     "prettier": "^3.0.3",
-    "react": "19.0.0",
-    "react-native": "0.79.5",
     "react-native-builder-bob": "^0.40.13",
+    "react-test-renderer": "19.1.0",
     "release-it": "^17.10.0",
     "typescript": "^5.8.3"
-  },
-  "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
   },
   "workspaces": [
     "example"
   ],
-  "packageManager": "yarn@3.6.1",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [

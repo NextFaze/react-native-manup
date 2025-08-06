@@ -1,6 +1,10 @@
 {
-  "extends": "../tsconfig",
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    // Avoid expo-cli auto-generating a tsconfig
+    "outDir": "dist",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "noEmit": true,
+    "jsx": "react-jsx"
   }
 }

@@ -1,3 +1,5 @@
-export function multiply(a: number, b: number): number {
-  return a * b;
-}
+export {
+  RemoteConfigProvider,
+  useRemoteConfigManUp,
+} from './providers/RemoteConfigProvider';
+export { type Config, type PlatFormData } from './models/config';
